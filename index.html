@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Witness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background: #080808;
+      color: #c8c0b0;
+      font-family: 'IM Fell English', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.75;
+      overflow: hidden;
+    }
+
+    /* Hidden video + canvas for frame capture */
+    #camera {
+      display: none;
+    }
+    #capture-canvas {
+      display: none;
+    }
+
+    /* Main layout */
+    #stage {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 0 5vh 0;
+    }
+
+    /* Journal scroll container */
+    #journal {
+      width: 100%;
+      max-width: 560px;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8vh 0 4vh 0;
+      position: relative;
+    }
+
+    /* Fade mask at top */
+    #journal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 180px;
+      background: linear-gradient(to bottom, #080808 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #entries {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .entry {
+      padding: 1.6rem 0 0 0;
+      opacity: 0;
+      animation: fadein 2s ease forwards;
+    }
+
+    .entry-time {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #4a4540;
+      margin-bottom: 0.4rem;
+      font-style: normal;
+    }
+
+    .entry-text {
+      color: #c8c0b0;
+      font-style: italic;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Status / waiting state */
+    #status {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #2a2520;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    /* Pulse dot — shows model is writing */
+    #dot {
+      position: fixed;
+      bottom: 28px;
+      right: 32px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2a2520;
+      transition: background 0.4s;
+    }
+    #dot.active {
+      background: #6a5f50;
+      animation: pulse 1.4s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+<video id="camera" autoplay playsinline muted></video>
+<canvas id="capture-canvas" width="640" height="480"></canvas>
+
+<div id="stage">
+  <div id="journal">
+    <div id="entries"></div>
+  </div>
+</div>
+
+<div id="status">waiting for camera</div>
+<div id="dot"></div>
+
+<script>
+// ─── Configuration ────────────────────────────────────────────────────────────
+const OLLAMA_URL   = 'http://localhost:11434/api/generate';
+const MODEL        = 'llama3.2-vision';
+const INTERVAL_MS  = 60000; // one entry per 60 seconds
+const SYSTEM_PROMPT = `You are a witness. A camera is observing whoever sits before it. Your task is to write a single brief journal entry — 2 to 4 short sentences — describing only what is physically visible.
+
+Rules you must never break:
+- Write in third person, present tense only.
+- Never use the word "you" or address the subject in any way.
+- Never describe emotions, intentions, or internal states. Only what is visible.
+- Never greet or acknowledge the subject.
+- Never make recommendations, suggestions, or evaluations.
+- Never refer to the camera or to yourself.
+- No metaphor unless the image demands it.
+- Be spare and factual — like a field researcher's notes, or Annie Ernaux's Exteriors.
+- Do not begin with "I" or "The camera" or "In the image."
+- Write only the entry. Nothing else. No preamble, no label, no sign-off.`;
+
+// ─── DOM refs ─────────────────────────────────────────────────────────────────
+const video   = document.getElementById('camera');
+const canvas  = document.getElementById('capture-canvas');
+const ctx     = canvas.getContext('2d');
+const entries = document.getElementById('entries');
+const status  = document.getElementById('status');
+const dot     = document.getElementById('dot');
+
+// ─── Start ────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 640, height: 480, facingMode: 'user' },
+      audio: false
+    });
+    video.srcObject = stream;
+    video.onloadedmetadata = () => {
+      status.style.display = 'none';
+      // First entry after 3 seconds, then every INTERVAL_MS
+      setTimeout(() => observe(), 3000);
+      setInterval(() => observe(), INTERVAL_MS);
+    };
+  } catch (err) {
+    status.textContent = 'camera unavailable';
+    console.error(err);
+  }
+}
+
+// ─── Capture frame → base64 ───────────────────────────────────────────────────
+function captureFrame() {
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  // Return base64 without the data:image/jpeg;base64, prefix
+  return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+}
+
+// ─── Call Ollama ──────────────────────────────────────────────────────────────
+async function queryModel(imageBase64) {
+  const body = {
+    model: MODEL,
+    prompt: 'Write the next journal entry.',
+    system: SYSTEM_PROMPT,
+    images: [imageBase64],
+    stream: false,
+    options: {
+      temperature: 0.7,
+      num_predict: 120
+    }
+  };
+
+  const res = await fetch(OLLAMA_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) throw new Error(`Ollama error: ${res.status}`);
+  const data = await res.json();
+  return data.response.trim();
+}
+
+// ─── Add entry to journal ─────────────────────────────────────────────────────
+function addEntry(text) {
+  const now  = new Date();
+  const time = now.toLocaleTimeString('en-US', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  });
+
+  const el = document.createElement('div');
+  el.className = 'entry';
+  el.innerHTML = `
+    <div class="entry-time">${time}</div>
+    <div class="entry-text">${escapeHTML(text)}</div>
+  `;
+
+  entries.appendChild(el);
+  el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// ─── Main observe loop ────────────────────────────────────────────────────────
+async function observe() {
+  dot.classList.add('active');
+  try {
+    const frame = captureFrame();
+    const text  = await queryModel(frame);
+    if (text) addEntry(text);
+  } catch (err) {
+    console.error('observe error:', err);
+  } finally {
+    dot.classList.remove('active');
+  }
+}
+
+// ─── Go ───────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
