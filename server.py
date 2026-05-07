@@ -46,53 +46,57 @@ LOG_HTML_TEMPLATE = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Witness — Log</title>
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+  <meta http-equiv="refresh" content="6"/>
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
     html, body {{
-      background: #080808;
-      color: #c8c0b0;
+      background: #0a0a0a;
+      color: #e8e3d6;
       font-family: 'IM Fell English', Georgia, serif;
-      font-size: 16px;
-      line-height: 1.8;
+      font-size: 18px;
+      line-height: 1.85;
     }}
     main {{
-      max-width: 620px;
+      max-width: 640px;
       margin: 0 auto;
-      padding: 10vh 24px 12vh;
+      padding: 8vh 28px 12vh;
     }}
     h1 {{
-      font-size: 11px;
-      letter-spacing: 0.2em;
+      font-size: 12px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: #3a3530;
-      margin-bottom: 6vh;
+      color: #888070;
+      margin-bottom: 1.2rem;
       font-style: normal;
     }}
     .entry {{
-      margin-bottom: 2.4rem;
-      padding-bottom: 2.4rem;
-      border-bottom: 1px solid #151210;
+      margin-bottom: 2.6rem;
+      padding-bottom: 2.6rem;
+      border-bottom: 1px solid #221f1a;
     }}
     .entry:last-child {{ border-bottom: none; }}
     .entry-time {{
-      font-size: 10px;
-      letter-spacing: 0.15em;
+      font-size: 11px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #3a3530;
-      margin-bottom: 0.4rem;
+      color: #8a8170;
+      margin-bottom: 0.6rem;
     }}
-    .entry-text {{ font-style: italic; color: #c8c0b0; }}
+    .entry-text {{
+      font-style: italic;
+      color: #f0ebde;
+    }}
     .empty {{
-      color: #2a2520;
+      color: #6a6155;
       font-style: italic;
       margin-top: 4vh;
     }}
     .count {{
-      font-size: 10px;
-      letter-spacing: 0.15em;
+      font-size: 11px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #2a2520;
-      margin-bottom: 4vh;
+      color: #6a6155;
+      margin-bottom: 5vh;
     }}
   </style>
 </head>
