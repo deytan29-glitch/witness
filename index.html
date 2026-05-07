@@ -152,8 +152,8 @@
 <script>
 // ─── Configuration ────────────────────────────────────────────────────────────
 const OLLAMA_URL   = 'http://localhost:11434/api/generate';
-const MODEL        = 'llama3.2-vision';
-const INTERVAL_MS  = 60000; // one entry per 60 seconds
+const MODEL        = 'llava:7b';
+const INTERVAL_MS  = 5000;  // one entry per 5 seconds
 const SYSTEM_PROMPT = `You are a witness. A camera is observing whoever sits before it. Your task is to write a single brief journal entry — 2 to 4 short sentences — describing only what is physically visible.
 
 Rules you must never break:
@@ -228,6 +228,19 @@ async function queryModel(imageBase64) {
   return data.response.trim();
 }
 
+// ─── Save entry to backend ────────────────────────────────────────────────────
+async function saveEntry(text, timestamp) {
+  try {
+    await fetch('/entry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, timestamp })
+    });
+  } catch (err) {
+    console.warn('Could not save entry to backend:', err);
+  }
+}
+
 // ─── Add entry to journal ─────────────────────────────────────────────────────
 function addEntry(text) {
   const now  = new Date();
@@ -244,6 +257,9 @@ function addEntry(text) {
 
   entries.appendChild(el);
   el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+  // Persist to backend
+  saveEntry(text, time);
 }
 
 function escapeHTML(str) {
