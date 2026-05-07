@@ -270,7 +270,10 @@ function escapeHTML(str) {
 }
 
 // ─── Main observe loop ────────────────────────────────────────────────────────
+let busy = false;
 async function observe() {
+  if (busy) return; // skip tick if model still working on previous frame
+  busy = true;
   dot.classList.add('active');
   try {
     const frame = captureFrame();
@@ -279,6 +282,7 @@ async function observe() {
   } catch (err) {
     console.error('observe error:', err);
   } finally {
+    busy = false;
     dot.classList.remove('active');
   }
 }
