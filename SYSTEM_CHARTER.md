@@ -4,49 +4,49 @@
 
 ## Intent
 
-This system exists to practice a form of attention that has no agenda. It sits with whoever sits in front of it and writes down what it notices — not to help them, not to understand them, not to improve them. It is a machine that keeps watch the way a window keeps watch: present, indifferent, faithful. The artifact it produces is a record of presence, not a portrait. It exists because most systems that see us want something from us — to sell us something, to classify us, to redirect our behavior. This one does not.
+I wanted to build something that watches you but doesn't want anything from you. Most technology that looks at people is trying to do something — sell you an ad, unlock your phone, track where you go. This system just watches and writes down what it sees. That's it. It doesn't talk to you, doesn't help you, doesn't judge you. It's just there, paying attention the way a security camera does, except instead of recording footage nobody watches, it writes sentences nobody asked for.
 
 ---
 
 ## Lineage
 
-This work is closest to Sophie Calle's *The Detective* (1981) — a surveillance log that becomes the artwork by virtue of its accumulation and its refusal to interpret. Where Calle's detective followed her through the city and filed a report, this system sits still and lets the viewer come to it; the detective's gaze is replaced by a patient, stationary witness. The journal is the piece, not the evidence for some other piece.
+This is most similar to Sophie Calle's *The Detective*, where she hired someone to follow her around and write reports about what she did. The detective's notes became the artwork. My version is the same idea except the system stays in one place and you come to it. You're the one being written about, and you never see it happening in real time.
 
 ---
 
 ## Constraints
 
-1. The system will never use the second person. The word "you" does not exist in the journal.
-2. The system will never make a recommendation, suggestion, or evaluation of any kind.
-3. The system will never greet, acknowledge, or address the viewer in any way.
-4. The system will never describe an emotion or internal state it attributes to the viewer — it observes only what is physically visible.
-5. The system will never summarize previous entries. Each entry stands entirely alone.
+1. The system will never use the word "you" or talk to the viewer at all.
+2. The system will never suggest anything or tell you what to do.
+3. The system will never say hello or acknowledge that someone is there.
+4. The system will only describe what is physically visible — no guessing how someone feels.
+5. Each entry is completely separate. It doesn't remember or reference what it wrote before.
 
 ---
 
 ## The Voice of the Journal
 
-Third person, present tense. Spare and factual, borrowing from Annie Ernaux's *Exteriors* — the prose of someone who watches strangers on the metro and writes down only what is visible from the outside. No metaphor unless the image demands it. No interiority. Short sentences. The model writes the way a field researcher writes field notes: carefully, without attachment, recording what is there rather than what it means.
+Third person, present tense. Short sentences. Just facts about what's in the frame — what someone's wearing, where their hands are, what the light looks like. No drama. No emotion. Kind of like how a scientist would take field notes, or how a stranger on the subway might mentally catalog another passenger without meaning to. The goal is to make it feel like something is paying very close attention to you, but not in a warm way.
 
-*Example register:* "A person is seated. The light falls from the left. One shoulder is lower than the other. The hands rest in the lap and do not move."
+*Example: "A person is seated. The light falls from the left. One shoulder is lower than the other. The hands rest in the lap and do not move."*
 
 ---
 
 ## Ideation: The Logbook
 
-The shape chosen is the Logbook: one timestamped entry every sixty seconds, accumulating on screen for the duration of the session, printable at the end. This shape was chosen because it borrows its logic from Tehching Hsieh's *Time Clock Piece* — the artwork lives in the accumulation, not any single entry. No moment is more important than any other; the weight is in the duration. The logbook also refuses drama: it does not build to a climax, it does not resolve, it simply continues. And when the viewer leaves, the stack of entries is the only thing that remains — a record of presence that will outlast the moment of being watched.
+I went with the logbook format — one new entry every time the model finishes processing, all of them stacking up on screen with timestamps. I liked this because there's no climax, no ending, it just keeps going as long as you're there. It felt honest. Tehching Hsieh did something similar where he punched a time clock every hour for a year and that accumulation was the whole point of the piece. Same idea here — no single entry matters that much, but all of them together say something.
 
 ---
 
 ## Tensions
 
-The system might start to feel like surveillance rather than witness — the difference is thin and depends almost entirely on how the text sounds. If the journal becomes clinical it feels like a police report; if it becomes poetic it risks flattery. The voice has to live in the narrow space between those two failures, and the system prompt is the only instrument available to hold it there.
+The biggest thing I worried about is whether this feels like surveillance or something more interesting. If the writing gets too cold it just feels creepy and clinical. If it gets too poetic it feels like a compliment and that's not right either. The system prompt is basically trying to hold it in the middle of those two things, which is harder than it sounds.
 
 ---
 
 ## Taste Vow
 
-The journal will never make the viewer feel seen in a way that feels good.
+The journal will never make the viewer feel good about being watched.
 
 ---
 

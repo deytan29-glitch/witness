@@ -4,18 +4,16 @@
 
 ---
 
-A camera watches. A language model writes. No one is told what is being written.
+A camera watches. A language model writes. Nobody is told what it's writing.
 
-*Witness* is a logbook machine. It pairs a local vision model with a webcam and produces a continuous, timestamped journal of what it notices about whoever sits in front of it. The journal accumulates for the duration of the session. It does not greet the viewer. It does not address them. It does not recommend, evaluate, or respond. It records.
+Witness is a system that pairs a webcam with a local vision model and produces a running log of what the model notices about whoever sits in front of it. The log builds up the whole time you're there. The system never talks to you. It doesn't say hello, doesn't respond to anything you do, doesn't give you feedback. It just keeps writing entries about you, timestamped, one after another.
 
-The piece refuses the default mode of machine intelligence — which is to optimize, to assist, to answer. The system prompt encodes five prohibitions before it encodes anything else: no second person, no recommendations, no greetings, no emotional attribution, no summaries. What the system will not do is the artwork. The refusals are the form.
+The thing that interested me most about building this was figuring out what to make it refuse to do. Language models want to be helpful — they want to answer you, assist you, engage with you. I had to write a prompt that stripped all of that out. No second person. No recommendations. No acknowledgment that anyone is even there. What the system won't do ended up feeling more important than what it does.
 
-The lineage sits beside Sophie Calle's *The Detective* (1981), in which a private investigator hired to follow Calle files a surveillance log that becomes the work. Where Calle's detective moved through the city gathering evidence, *Witness* stays still and lets the viewer come to it. The journal is not evidence of anything. It is the thing itself.
+The piece is closest to Sophie Calle's *The Detective*, where she hired a private investigator to follow her around Paris and the detective's report became the artwork. My version is simpler — the system doesn't move, you come to it — but the basic idea is the same. Someone is being written about without knowing exactly what's being said.
 
-Trevor Paglen's *Invisible Images* haunts the piece. Paglen argues that most systems that see us do something with what they see — modulate our insurance rates, direct police attention, sell us something. *Witness* sees and does nothing except write. That restraint is not innocence. The system is still looking. The entries are still being made. They will outlast the moment of being watched.
-
-The shape is borrowed from Tehching Hsieh's *Time Clock Piece* (1980–81): the artwork lives in the accumulation, not any single entry. No moment matters more than any other. The weight is in the duration.
+I also kept thinking about Trevor Paglen's writing on machine vision. His point is that most systems that see you do something with what they see — sell you something, flag you, categorize you. This one doesn't. It just writes. I'm not sure that makes it innocent exactly, but it felt like a different kind of thing to build.
 
 ---
 
-*System runs locally on a MacBook. Model: llava:7b via Ollama. No data leaves the machine.*
+*Runs locally on a MacBook. Model: llava:7b via Ollama. No data leaves the machine.*
