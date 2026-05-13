@@ -160,7 +160,15 @@ class Handler(BaseHTTPRequestHandler):
             # Try to serve static file
             filepath = os.path.join(STATIC, path.lstrip('/'))
             if os.path.isfile(filepath):
-                self._serve_file(path.lstrip('/'), 'text/plain')
+                ext = path.rsplit('.', 1)[-1].lower()
+                mime_map = {
+                    'png': 'image/png', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg',
+                    'gif': 'image/gif', 'svg': 'image/svg+xml',
+                    'html': 'text/html', 'js': 'application/javascript',
+                    'css': 'text/css', 'json': 'application/json',
+                }
+                mime = mime_map.get(ext, 'application/octet-stream')
+                self._serve_file(path.lstrip('/'), mime)
             else:
                 self._send(404, 'text/plain', b'Not found')
 
