@@ -10,8 +10,8 @@
 |---|---|
 | `ARTIST_STATEMENT.md` | 200-300 word artist statement |
 | `screenshots/` | 3-5 still frames from a live session |
-| `screen-capture.mp4` | 60-second screen capture of the system running *(see instructions below)* |
-| `session-print.pdf` | One printed page from a real session, signed and dated |
+| `screen-capture.mov` | 60-second screen capture of the system running *(see instructions below)* |
+| `session-print.png` | Screenshot of a printed log page from a real session |
 
 ---
 
@@ -42,7 +42,7 @@ To record the 60-second screen capture:
 1. Open the app at http://localhost:8080 in full screen (⌘ + Shift + F)
 2. Open QuickTime Player → File → New Screen Recording
 3. Record for 60 seconds with the system running and writing
-4. Export as MP4 and save to this folder as `screen-capture.mp4`
+4. Export and save to this folder as `screen-capture.mov`
 
 ---
 
